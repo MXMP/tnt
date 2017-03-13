@@ -1,0 +1,1 @@
+config account admin encrypt plain_text SuperSecurePassword
