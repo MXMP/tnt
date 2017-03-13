@@ -15,7 +15,7 @@ def send_commands(host):
     print('Connect to host: {}'.format(host))
     try:
         conn = Telnet(host, 23, 10)
-    except socket.timeout:
+    except (socket.timeout, OSError):
         # если при подключении возник таймаут, значит скорее всего устройство недоступно
         print('Can\'t connect to host: {}'.format(host))
         # создаем файл по шаблону "fail-<host>.txt" и пишем в него, что хост в дауне
