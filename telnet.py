@@ -19,7 +19,7 @@ def send_commands(host):
         # если при подключении возник таймаут, значит скорее всего устройство недоступно
         print('Can\'t connect to host: {}'.format(host))
         # создаем файл по шаблону "fail-<host>.txt" и пишем в него, что хост в дауне
-        write_to_file(os.path.join('reports', 'fail-' + host + '.txt'), ['Error', 'Host is down'])
+        write_to_file(os.path.join('reports', 'fail-' + host + '.txt'), ['Error\n', 'Host is down\n'])
     else:
         # если подключение прошло успешно, то передаем логин/пароль пользователя
         conn.write(user.encode('ascii') + b'\n')
@@ -34,8 +34,12 @@ def send_commands(host):
         sleep(5)
         # пишем в файл вывод
         conn.write(b'logout\n')
-        write_to_file(os.path.join('reports', host + '.txt'), conn.read_all().decode('ascii'))
-        conn.close()
+        try:
+            write_to_file(os.path.join('reports', host + '.txt'), conn.read_all().decode('ascii'))
+        except socket.timeout:
+            write_to_file(os.path.join('reports', 'output_fail-' + host + '.txt'), ['Error\n', 'Host is down\n'])
+        finally:
+            conn.close()
 
 
 def get_from_file(filename):
