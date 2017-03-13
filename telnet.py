@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from getpass import getpass
 from time import sleep
 import socket
@@ -27,20 +29,21 @@ def send_commands(host):
             print('Send "{}" to {}'.format(command, host))
             conn.write(command.encode('ascii') + b'\n')
         # сохранием конфигурацию устройства
-        conn.write(b'save all\n')
+        conn.write(b'save\n')
         # здесь выжидаем 5 секунд, т.к. сохранение конфига происходит не сразу
         sleep(5)
         # пишем в файл вывод
-        write_to_file(os.path.join('reports', host + '.txt'), conn.read_all())
+        conn.write(b'logout\n')
+        write_to_file(os.path.join('reports', host + '.txt'), conn.read_all().decode('ascii'))
         conn.close()
 
 
 def get_from_file(filename):
     """ Просто читает данные из файла построчно и возвращает их в виде списка."""
-    f = open(filename)
     results = []
+    f = open(filename)
     for line in f:
-        results.append(line)
+        results.append(line.rstrip())
     f.close()
     return results
 
@@ -49,7 +52,7 @@ def write_to_file(filename, data):
     """ Просто пишет данные в файл построчно."""
     f = open(filename, 'w')
     for line in data:
-        f.write(line + '\n')
+        f.write(line)
     f.close()
 
 
