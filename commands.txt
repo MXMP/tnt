@@ -1,1 +1,3 @@
-config account admin encrypt plain_text SuperSecurePassword
+disable clipaging
+show switch
+enable clipaging
