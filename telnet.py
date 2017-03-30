@@ -61,10 +61,19 @@ def write_to_file(filename, data):
 
 
 if __name__ == '__main__':
-    # спрашиваем у пользователя его логин
-    user = input('Enter your remote account: ')
-    # спрашиваем у пользователя его пароль
-    password = getpass('Password: ')
+    # путь до файла с логином и паролем
+    auth_file = 'auth.txt'
+    # если файл с данными для авторизации существует, то берем логин и пароль из него
+    if os.path.isfile(auth_file):
+        auth = get_from_file(auth_file)
+        user = auth[0]
+        password = auth[1]
+    else:
+        # спрашиваем у пользователя его логин
+        user = input('Enter your remote account: ')
+        # спрашиваем у пользователя его пароль
+        password = getpass('Password: ')
+
     if password:
         # читаем из файлов хосты, к которым нужно коннектится, и комманды, которые нужно передавать
         commands = get_from_file('commands.txt')
